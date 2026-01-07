@@ -8,7 +8,9 @@ from sqlalchemy import func
 
 engine = create_engine(get_database_url())
 metadata = MetaData()
-metadata.create_all(bind=engine)
+# Do not create tables here — tables are defined in `src.database.schema`.
+# Table creation (metadata.create_all) will be invoked after all table
+# definitions are imported (see src.main).
 
 new_uuid = uuid.uuid4
 now = datetime.now(timezone.utc)

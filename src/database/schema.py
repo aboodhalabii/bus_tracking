@@ -54,12 +54,57 @@ trips = Table(
     db_client.metadata,
     Column("id", UUID(as_uuid=True), primary_key=True, default=db_client.new_uuid),
     Column("route_id", UUID(as_uuid=True), ForeignKey("routes.id")),
-    Column("driver_id", UUID(as_uuid=True), ForeignKey("driver.id")),
+    Column("driver_id", UUID(as_uuid=True), ForeignKey("drivers.id")),
     Column("bus_id", UUID(as_uuid=True), ForeignKey("buses.id")),
     Column("latitude", Float),
     Column("longitude", Float),
     Column("status", status_enum),
     Column("current_time", DateTime, **db_client.default_now),
+    Column("created_at", DateTime, nullable=False, **db_client.default_now),
+    Column("updated_at", DateTime, nullable=False, onupdate=db_client.now, **db_client.default_now),
+    Column("deleted_at", DateTime, nullable=True),
+)
+
+
+drivers = Table(
+    "drivers",
+    db_client.metadata,
+    Column("id", UUID(as_uuid=True), primary_key=True, default=db_client.new_uuid),
+    Column("first_name", Text),
+    Column("last_name", Text),
+    Column("phone", Text),
+    Column("email", Text),
+    Column("status", status_enum),
+    Column("created_at", DateTime, nullable=False, **db_client.default_now),
+    Column("updated_at", DateTime, nullable=False, onupdate=db_client.now, **db_client.default_now),
+    Column("deleted_at", DateTime, nullable=True),
+)
+
+
+students = Table(
+    "students",
+    db_client.metadata,
+    Column("id", UUID(as_uuid=True), primary_key=True, default=db_client.new_uuid),
+    Column("first_name", Text),
+    Column("last_name", Text),
+    Column("email", Text),
+    Column("student_number", Text, unique=True),
+    Column("status", status_enum),
+    Column("created_at", DateTime, nullable=False, **db_client.default_now),
+    Column("updated_at", DateTime, nullable=False, onupdate=db_client.now, **db_client.default_now),
+    Column("deleted_at", DateTime, nullable=True),
+)
+
+
+users = Table(
+    "users",
+    db_client.metadata,
+    Column("id", UUID(as_uuid=True), primary_key=True, default=db_client.new_uuid),
+    Column("email", Text, unique=True, nullable=False),
+    Column("password_hash", Text, nullable=False),
+    Column("role", Text, nullable=False),
+    Column("first_name", Text),
+    Column("last_name", Text),
     Column("created_at", DateTime, nullable=False, **db_client.default_now),
     Column("updated_at", DateTime, nullable=False, onupdate=db_client.now, **db_client.default_now),
     Column("deleted_at", DateTime, nullable=True),

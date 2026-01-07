@@ -1,6 +1,6 @@
 from src.database.connection import engine, metadata, new_uuid, now, default_now
 from sqlalchemy.exc import IntegrityError, OperationalError
-from flask import abort
+from fastapi import HTTPException
 
 
 class DBClient:
@@ -23,13 +23,13 @@ class DBClient:
 
         except IntegrityError as e:
             detail = f"Database integrity constraint violated: {str(e)}."
-            abort(409, description=detail)
+            raise HTTPException(status_code=409, detail=detail)
         except OperationalError as e:
             detail = f"Unexpected database error: {str(e)}"
-            abort(500, description=detail)
+            raise HTTPException(status_code=500, detail=detail)
         except Exception as e:
             detail = f"Unexpected error: {str(e)}"
-            abort(500, description=detail)
+            raise HTTPException(status_code=500, detail=detail)
 
     def execute_one(self, query):
         try:
@@ -43,13 +43,13 @@ class DBClient:
 
         except IntegrityError as e:
             detail = f"Database integrity constraint violated: {str(e)}."
-            abort(409, description=detail)
+            raise HTTPException(status_code=409, detail=detail)
         except OperationalError as e:
             detail = f"Unexpected database error: {str(e)}"
-            abort(500, description=detail)
+            raise HTTPException(status_code=500, detail=detail)
         except Exception as e:
             detail = f"Unexpected error: {str(e)}"
-            abort(500, description=detail)
+            raise HTTPException(status_code=500, detail=detail)
 
 
 db_client = DBClient()
