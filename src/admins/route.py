@@ -20,8 +20,19 @@ def admin_list_buses() -> list[dict[str, Any]]:
 
 
 @router.delete("/buses/{bus_id}", status_code=204)
-def admin_delete_bus(bus_id: UUID):
-    query = delete(buses_table).where(buses_table.c.id == bus_id)
+def admin_delete_bus(bus_id: str):
+    """Delete a bus by id.
+
+    Accepts a string and validates it as a UUID (GUID). Returns a 422 with a
+    clear message if the provided id is not a valid GUID to match client
+    expectations.
+    """
+    try:
+        bus_uuid = UUID(bus_id)
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="For 'bus_id': Value must be a Guid.")
+
+    query = delete(buses_table).where(buses_table.c.id == bus_uuid)
     db_client.execute_one(query)
     return None
 
